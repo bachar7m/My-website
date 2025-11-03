@@ -348,6 +348,9 @@ Areej 7ob 7yeti n7ibek baaaaaaaarcha w nmout 3lik w t3iz 3liya barcha manajmch n
 <audio controls>
   <source src="Stromae - Formidable (Lyrics) (mp3cut.net).mp3" type="audio/mpeg">
 </audio>
+<audio id="bg-music" autoplay loop>
+  <source src="soundtrack-10.mp3" type="audio/mpeg">
+</audio>
     
   </div>
 </div>
@@ -379,6 +382,9 @@ function checkPassword() {
   if (input === '23/09/2025') {
     document.getElementById('login').style.display = 'none';
     document.getElementById('main').style.display = 'flex';
+    // 🩷 Play background music after correct password
+    const music = document.getElementById('bg-music');
+    music.play();
   } else {
     alert('Wrong password 💔');
   }
@@ -469,6 +475,42 @@ function openImage(src) {
 function closeImage() {
   document.getElementById('imageViewer').style.display = 'none';
   // history.back(); // uncomment only if you want to go back one page
+}
+</script>
+  <script>
+// Background music control logic
+const bgMusic = document.getElementById('bg-music');
+
+// Pause BG music when any <video> or <audio> (music player) starts
+document.addEventListener('play', function(e) {
+  if (e.target.tagName === 'VIDEO' || e.target.tagName === 'AUDIO') {
+    if (e.target.id !== 'bg-music') {
+      bgMusic.pause();
+    }
+  }
+}, true);
+
+// Resume BG music when all videos and audios stop
+document.addEventListener('pause', function(e) {
+  if (e.target.tagName === 'VIDEO' || e.target.tagName === 'AUDIO') {
+    // Check if no other video/audio is playing
+    const playing = Array.from(document.querySelectorAll('video, audio'))
+      .some(el => !el.paused && el.id !== 'bg-music');
+    if (!playing) {
+      bgMusic.play();
+    }
+  }
+}, true);
+
+// Resume BG music when closing modals
+function closeModal(id) {
+  document.getElementById(id).style.display = 'none';
+  // Check if no video/audio is playing, then resume bg music
+  const playing = Array.from(document.querySelectorAll('video, audio'))
+    .some(el => !el.paused && el.id !== 'bg-music');
+  if (!playing) {
+    bgMusic.play();
+  }
 }
 </script>
 </body>
